@@ -1,0 +1,28 @@
+name: splitkey
+version: 0.1.0
+
+authors:
+  - Your Name <your.email@example.com>
+
+crystal: ">= 1.0.0"
+
+targets:
+  splitkey:
+    main: src/splitkey.cr
+
+dependencies:
+  shamir:
+    github: seanyeh/shamir.cr
+  qr-code:
+    github: spider-gazelle/qr-code
+  stumpy_png:
+    github: stumpycr/stumpy_png
+    version: "~> 5.0"
+
+
+development_dependencies:
+  ameba:
+    github: crystal-ameba/ameba
+    version: ~> 1.6.0
+
+license: MIT
