@@ -5,6 +5,11 @@ on:
     tags:
       - 'v*'
   workflow_dispatch:
+    inputs:
+      tag_name:
+        description: 'Tag name for release (e.g., v0.1.0)'
+        required: true
+        type: string
 
 permissions:
   contents: write
@@ -29,3 +34,4 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: splitkey
+          tag_name: ${{ github.event.inputs.tag_name || github.ref_name }}
