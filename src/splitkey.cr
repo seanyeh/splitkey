@@ -3,7 +3,7 @@ require "shamir"
 require "./splitkey/commands/split"
 require "./splitkey/commands/combine"
 
-VERSION = "0.1.0"
+VERSION = "0.1.1"
 
 def print_help
   puts <<-HELP
