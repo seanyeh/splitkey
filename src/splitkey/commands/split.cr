@@ -13,7 +13,7 @@ module Splitkey::Commands
 
       parser = OptionParser.new do |opts|
         opts.on("-s SECRET", "--secret=SECRET", "Secret to split") { |s| secret = s }
-        opts.on("-n N", "--shares=N", "Total number of shares") { |num| n = num.to_i }
+        opts.on("-n N", "--num-shares=N", "Total number of shares") { |num| n = num.to_i }
         opts.on("-k K", "--threshold=K", "Minimum shares needed") { |num| k = num.to_i }
         opts.on("-o PREFIX", "--output=PREFIX", "Output file prefix") { |prefix| output_prefix = prefix }
         opts.on("-f FORMAT", "--format=FORMAT", "Output format: text, qr (default: text)") { |f| format = f.downcase }
@@ -35,7 +35,7 @@ module Splitkey::Commands
         exit 1
       end
       if n.nil?
-        STDERR.puts "Error: --shares is required"
+        STDERR.puts "Error: --num-shares is required"
         exit 1
       end
       if k.nil?
@@ -95,7 +95,7 @@ module Splitkey::Commands
 
       OPTIONS:
         -s, --secret SECRET         Secret to split
-        -n, --shares N              Total number of shares to create
+        -n, --num-shares N       Total number of shares to create
         -k, --threshold K           Minimum shares needed to reconstruct
         -o, --output PREFIX         Output file prefix (default: share)
         -f, --format FORMAT         Output format: text, qr (default: text)

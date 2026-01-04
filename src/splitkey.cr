@@ -3,7 +3,7 @@ require "shamir"
 require "./splitkey/commands/split"
 require "./splitkey/commands/combine"
 
-VERSION = "0.1.1"
+VERSION = "0.1.2"
 
 def print_help
   puts <<-HELP
@@ -15,7 +15,7 @@ def print_help
 
   SPLIT OPTIONS:
     -s, --secret SECRET         Secret to split (or use stdin)
-    -n, --shares N              Total number of shares to create
+    -n, --num-shares N          Total number of shares to create
     -k, --threshold K           Minimum shares needed to reconstruct
     -o, --output PREFIX         Output file prefix (default: share-)
 

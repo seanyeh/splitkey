@@ -10,7 +10,7 @@ shards:
 
   shamir:
     git: https://github.com/seanyeh/shamir.cr.git
-    version: 0.2.0
+    version: 0.3.0
 
   stumpy_core:
     git: https://github.com/stumpycr/stumpy_core.git
