@@ -11,6 +11,7 @@ module Splitkey::Commands
       k : Int32? = nil
       output_prefix = "share"
       format = "text"
+      html_title = "Secret"
 
       parser = OptionParser.new do |opts|
         opts.on("-s SECRET", "--secret=SECRET", "Secret to split") { |s| secret = s }
@@ -18,6 +19,7 @@ module Splitkey::Commands
         opts.on("-k K", "--threshold=K", "Minimum shares needed") { |num| k = num.to_i }
         opts.on("-o PREFIX", "--output=PREFIX", "Output file prefix") { |prefix| output_prefix = prefix }
         opts.on("-f FORMAT", "--format=FORMAT", "Output format: text, qr, html (default: text)") { |f| format = f.downcase }
+        opts.on("--html-title TITLE", "Title for HTML output (default: Secret)") { |title| html_title = title }
         opts.on("-h", "--help", "Show help") do
           print_help
           exit 0
@@ -71,7 +73,7 @@ module Splitkey::Commands
             puts "Created #{filename}"
           when "html"
             filename = "#{output_prefix}-#{share.x}.html"
-            generate_html(share.to_hex, filename)
+            generate_html(share.to_hex, filename, html_title)
             puts "Created #{filename}"
           end
         end
@@ -91,18 +93,16 @@ module Splitkey::Commands
       File.write(filename, png_bytes)
     end
 
-    private def self.generate_html(data : String, filename : String)
-      # Generate QR code as base64-encoded PNG
+    private def self.generate_html(data : String, filename : String, title : String)
       png_bytes = QRCode.new(data).as_png(size: 256)
       base64_png = Base64.strict_encode(png_bytes)
 
-      # Create simple HTML with embedded QR code
       html = <<-HTML
       <!DOCTYPE html>
       <html>
       <head>
         <meta charset="UTF-8">
-        <title>Secret</title>
+        <title>#{title}</title>
         <style>
           body { font-family: monospace; text-align: center; margin: 50px; }
           h1 { font-size: 24px; }
@@ -111,7 +111,7 @@ module Splitkey::Commands
         </style>
       </head>
       <body>
-        <h1>Secret</h1>
+        <h1>#{title}</h1>
         <img src="data:image/png;base64,#{base64_png}" alt="QR Code">
         <div class="value">#{data}</div>
       </body>
@@ -134,6 +134,7 @@ module Splitkey::Commands
         -k, --threshold K           Minimum shares needed to reconstruct
         -o, --output PREFIX         Output file prefix (default: share)
         -f, --format FORMAT         Output format: text, qr, html (default: text)
+            --html-title TITLE      Title for HTML output (default: Secret)
         -h, --help                  Show this help
 
       EXAMPLES:
