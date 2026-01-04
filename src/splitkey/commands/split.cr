@@ -1,6 +1,7 @@
 require "option_parser"
 require "qr-code"
 require "qr-code/export/png"
+require "base64"
 
 module Splitkey::Commands
   module Split
@@ -16,7 +17,7 @@ module Splitkey::Commands
         opts.on("-n N", "--num-shares=N", "Total number of shares") { |num| n = num.to_i }
         opts.on("-k K", "--threshold=K", "Minimum shares needed") { |num| k = num.to_i }
         opts.on("-o PREFIX", "--output=PREFIX", "Output file prefix") { |prefix| output_prefix = prefix }
-        opts.on("-f FORMAT", "--format=FORMAT", "Output format: text, qr (default: text)") { |f| format = f.downcase }
+        opts.on("-f FORMAT", "--format=FORMAT", "Output format: text, qr, html (default: text)") { |f| format = f.downcase }
         opts.on("-h", "--help", "Show help") do
           print_help
           exit 0
@@ -43,8 +44,8 @@ module Splitkey::Commands
         exit 1
       end
 
-      unless ["text", "qr"].includes?(format)
-        STDERR.puts "Error: Invalid format '#{format}'. Must be 'text' or 'qr'"
+      unless ["text", "qr", "html"].includes?(format)
+        STDERR.puts "Error: Invalid format '#{format}'. Must be 'text', 'qr', or 'html'"
         exit 1
       end
 
@@ -68,6 +69,10 @@ module Splitkey::Commands
             filename = "#{output_prefix}-#{share.x}.png"
             generate_qr_code(share.to_hex, filename)
             puts "Created #{filename}"
+          when "html"
+            filename = "#{output_prefix}-#{share.x}.html"
+            generate_html(share.to_hex, filename)
+            puts "Created #{filename}"
           end
         end
 
@@ -86,6 +91,36 @@ module Splitkey::Commands
       File.write(filename, png_bytes)
     end
 
+    private def self.generate_html(data : String, filename : String)
+      # Generate QR code as base64-encoded PNG
+      png_bytes = QRCode.new(data).as_png(size: 256)
+      base64_png = Base64.strict_encode(png_bytes)
+
+      # Create simple HTML with embedded QR code
+      html = <<-HTML
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="UTF-8">
+        <title>Secret</title>
+        <style>
+          body { font-family: monospace; text-align: center; margin: 50px; }
+          h1 { font-size: 24px; }
+          img { margin: 20px 0; }
+          .value { font-size: 10px; color: #666; word-wrap: break-word; max-width: 500px; margin: 0 auto; }
+        </style>
+      </head>
+      <body>
+        <h1>Secret</h1>
+        <img src="data:image/png;base64,#{base64_png}" alt="QR Code">
+        <div class="value">#{data}</div>
+      </body>
+      </html>
+      HTML
+
+      File.write(filename, html)
+    end
+
     private def self.print_help
       puts <<-HELP
       splitkey split - Split a secret into shares
@@ -98,7 +133,7 @@ module Splitkey::Commands
         -n, --num-shares N       Total number of shares to create
         -k, --threshold K           Minimum shares needed to reconstruct
         -o, --output PREFIX         Output file prefix (default: share)
-        -f, --format FORMAT         Output format: text, qr (default: text)
+        -f, --format FORMAT         Output format: text, qr, html (default: text)
         -h, --help                  Show this help
 
       EXAMPLES:
