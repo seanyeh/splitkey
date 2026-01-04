@@ -10,18 +10,19 @@ def print_help
   splitkey v#{VERSION} - Split and combine secrets using Shamir's Secret Sharing
 
   USAGE:
-    splitkey split [options]    Split a secret into shares
-    splitkey combine [options]  Combine shares to recover secret
+    splitkey split [options]              Split a secret into shares
+    splitkey combine <share-files...>     Combine shares to recover secret
 
   SPLIT OPTIONS:
-    -s, --secret SECRET         Secret to split (or use stdin)
+    -s, --secret SECRET         Secret to split
     -n, --num-shares N          Total number of shares to create
     -k, --threshold K           Minimum shares needed to reconstruct
-    -o, --output PREFIX         Output file prefix (default: share-)
+    -o, --output PREFIX         Output file prefix (default: share)
+    -f, --format FORMAT         Output format: text, qr (default: text)
+    -h, --help                  Show this help
 
   COMBINE OPTIONS:
-    -i, --input FILES           Share files to combine (space-separated)
-    -o, --output FILE           Output file for secret (default: stdout)
+    -h, --help                  Show this help
 
   GLOBAL OPTIONS:
     -h, --help                  Show this help
@@ -31,7 +32,10 @@ def print_help
     # Split a secret into 5 shares, requiring 3 to reconstruct
     splitkey split -s "my password" -n 5 -k 3
 
-    # Combine shares to recover secret
+    # Split and output as QR codes
+    splitkey split -s "my password" -n 5 -k 3 -f qr
+
+    # Combine shares to recover secret (outputs to stdout)
     splitkey combine share-1.txt share-2.txt share-3.txt
 
   HELP

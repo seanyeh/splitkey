@@ -24,13 +24,6 @@ splitkey split -s "my password" -n 5 -k 3
 splitkey split -s "my password" -n 5 -k 3 --format qr
 ```
 
-**Options:**
-- `-s, --secret SECRET` - Secret to split (required)
-- `-n, --shares N` - Total number of shares to create (required)
-- `-k, --threshold K` - Minimum shares needed to reconstruct (required)
-- `-o, --output PREFIX` - Output file prefix (default: share)
-- `-f, --format FORMAT` - Output format: text, qr (default: text)
-
 ### Combine shares
 
 Combine shares to recover the original secret:
