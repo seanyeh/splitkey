@@ -107,7 +107,7 @@ module Splitkey::Commands
           body { font-family: monospace; text-align: center; margin: 50px; }
           h1 { font-size: 24px; }
           img { margin: 20px 0; }
-          .value { font-size: 10px; color: #666; word-wrap: break-word; max-width: 500px; margin: 0 auto; }
+          .value { font-size: 10px; color: #333; word-wrap: break-word; max-width: 500px; margin: 0 auto; }
         </style>
       </head>
       <body>
